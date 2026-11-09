@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Namit Malhotra - The Vision Board, 2036</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Josefin+Sans:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --gold:#c9a84c;--gold-bright:#e8c97a;--gold-dim:#7a6030;
+  --ink:#0b0804;--cream:#f5edd8;--paper:#f3e9d0;--paper-ink:#2a1f0e;
+  --muted:rgba(245,237,216,.58);--red:#a32a22;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--ink);
+  background-image:radial-gradient(rgba(201,168,76,.13) 1px,transparent 1.4px);
+  background-size:30px 30px;
+  color:var(--cream);font-family:'Cormorant Garamond',Georgia,serif;overflow-x:hidden;
+}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:9997;background:radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.55) 100%)}
+
+/* chrome */
+#progress-bar{position:fixed;top:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--gold-dim),var(--gold),var(--gold-bright));z-index:999}
+#music-btn{position:fixed;top:20px;right:20px;z-index:1000;width:46px;height:46px;border-radius:50%;border:1px solid rgba(201,168,76,.45);background:rgba(8,6,4,.85);backdrop-filter:blur(10px);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.25s}
+#music-btn:hover{border-color:var(--gold);transform:scale(1.06)}
+#music-btn svg{width:18px;height:18px;fill:none;stroke:var(--gold);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.music-label{position:fixed;top:20px;right:74px;z-index:1000;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);line-height:46px;opacity:0;transition:opacity .5s;pointer-events:none}
+.music-label.visible{opacity:1}
+#chapter-nav{position:fixed;left:22px;top:50%;transform:translateY(-50%);z-index:1000;display:flex;flex-direction:column;gap:13px}
+.nav-dot{width:6px;height:6px;border-radius:50%;border:1px solid rgba(201,168,76,.4);cursor:pointer;transition:.3s;position:relative}
+.nav-dot:hover,.nav-dot.active{background:var(--gold);border-color:var(--gold)}
+.dot-label{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-family:'Josefin Sans',sans-serif;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gold-dim);white-space:nowrap;opacity:0;transition:.3s;pointer-events:none}
+.nav-dot:hover .dot-label{opacity:1}
+#particle-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:1;opacity:.35}
+
+/* opening */
+#opening{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 28px;position:relative;z-index:2;background:radial-gradient(ellipse at center,rgba(40,28,10,.85) 0%,transparent 70%)}
+.op-pre{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:8px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:26px;opacity:0;animation:fadeUp 1.4s .3s ease forwards}
+.op-title{font-size:clamp(54px,10vw,112px);font-weight:300;font-style:italic;line-height:1;opacity:0;animation:fadeUp 1.4s .7s ease forwards;text-shadow:0 0 80px rgba(201,168,76,.2)}
+.op-title span{color:var(--gold)}
+.op-tag{font-family:'Caveat',cursive;font-size:clamp(24px,3.4vw,34px);color:var(--gold-bright);margin-top:22px;transform:rotate(-2deg);opacity:0;animation:fadeUp 1.4s 1.2s ease forwards}
+.op-sub{font-family:'Josefin Sans',sans-serif;font-size:11px;letter-spacing:6px;text-transform:uppercase;color:var(--muted);margin-top:34px;opacity:0;animation:fadeUp 1.4s 1.6s ease forwards}
+.op-year{font-style:italic;font-size:14px;color:var(--gold-dim);margin-top:14px;opacity:0;animation:fadeUp 1.4s 1.9s ease forwards}
+.scroll-cue{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp 1.4s 2.4s ease forwards}
+.scroll-cue span{font-family:'Josefin Sans',sans-serif;font-size:8px;letter-spacing:4px;text-transform:uppercase;color:var(--gold-dim)}
+.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--gold-dim),transparent);animation:pulse 2s infinite}
+
+/* boards */
+.board{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:110px 32px 70px}
+.board-head{margin-bottom:54px;text-align:center}
+.board-label{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:7px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:14px}
+.board-title{font-size:clamp(34px,5.4vw,64px);font-weight:400;font-style:italic;line-height:1.12}
+.board-title em{color:var(--gold);font-style:normal}
+.board-note{font-family:'Caveat',cursive;font-size:25px;color:var(--gold-bright);margin-top:12px;transform:rotate(-1.5deg);display:inline-block}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .9s ease,transform .9s ease}
+.reveal.in{opacity:1;transform:none}
+
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:30px 24px;align-items:start}
+.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+
+/* tiles */
+.tile{position:relative;--r:0deg;transform:translateY(46px) rotate(var(--r)) scale(.95);opacity:0;transition:opacity .9s ease var(--d,0s),transform .9s cubic-bezier(.2,.8,.2,1) var(--d,0s),box-shadow .3s;box-shadow:0 14px 34px rgba(0,0,0,.5)}
+.tile.in{opacity:1;transform:translateY(0) rotate(var(--r)) scale(1)}
+.tile.in:hover{transform:translateY(-8px) rotate(0deg) scale(1.025);z-index:20;box-shadow:0 24px 50px rgba(0,0,0,.65)}
+/* tape + pin */
+.tape::before{content:'';position:absolute;top:-13px;left:50%;width:92px;height:26px;transform:translateX(-50%) rotate(-3deg);background:rgba(232,201,122,.5);backdrop-filter:blur(2px);box-shadow:0 1px 3px rgba(0,0,0,.25);z-index:3}
+.pin::before{content:'';position:absolute;top:-9px;left:50%;width:18px;height:18px;border-radius:50%;transform:translateX(-50%);background:radial-gradient(circle at 35% 30%,#e0594e,var(--red) 60%,#5c120d);box-shadow:0 3px 6px rgba(0,0,0,.5);z-index:3}
+
+.paper{background:var(--paper);color:var(--paper-ink);padding:30px 28px;background-image:linear-gradient(180deg,rgba(255,255,255,.35),transparent 30%)}
+.paper h3{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;line-height:1.3;margin-bottom:10px}
+.paper p{font-size:17px;line-height:1.65}
+.paper .src{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#8a6f33;margin-bottom:10px;display:block}
+.paper em{color:#7a5a14}
+
+.sticky{background:var(--gold-bright);color:#2b1e06;padding:30px 26px 34px;font-family:'Caveat',cursive;font-size:30px;line-height:1.2;font-weight:700;box-shadow:0 14px 30px rgba(0,0,0,.45),inset 0 -22px 30px rgba(160,110,20,.18)}
+.sticky small{display:block;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;font-weight:400;margin-top:14px;opacity:.7}
+
+.polaroid{background:#faf4e4;padding:14px 14px 18px;color:var(--paper-ink)}
+.photo{height:190px;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;background:linear-gradient(145deg,#1b140a,#3a2810 55%,#6b4a14);position:relative;overflow:hidden}
+.photo::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 70% 25%,rgba(232,201,122,.35),transparent 55%)}
+.photo b{position:relative;z-index:2;font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;font-style:italic;color:var(--gold-bright);line-height:1}
+.photo i{position:relative;z-index:2;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(245,237,216,.7);font-style:normal;margin-top:8px}
+.polaroid .cap{font-family:'Caveat',cursive;font-size:26px;text-align:center;margin-top:12px;line-height:1.05}
+.photo.c2{background:linear-gradient(145deg,#0c1220,#17284a 55%,#2b4a86)}
+.photo.c3{background:linear-gradient(145deg,#220c0c,#4a1717 55%,#86312b)}
+.photo.c4{background:linear-gradient(145deg,#0c200f,#174a22 55%,#2b863e)}
+
+.dark{background:linear-gradient(160deg,#17110a,#0e0a05);border:1px solid rgba(201,168,76,.32);padding:30px 28px}
+.dark h3{font-size:30px;font-style:italic;font-weight:400;color:var(--gold-bright);margin-bottom:12px}
+.dark p{font-size:19px;line-height:1.75;color:rgba(245,237,216,.85)}
+.dark .src{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:12px;display:block}
+.dark em{color:var(--gold-bright)}
+
+.quote{background:#120d07;border-left:3px solid var(--gold);padding:34px 32px}
+.quote blockquote{font-size:clamp(21px,2.6vw,28px);font-style:italic;font-weight:300;line-height:1.6}
+.quote cite{display:block;margin-top:18px;font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold-dim);font-style:normal}
+
+.stat{background:var(--paper);color:var(--paper-ink);text-align:center;padding:30px 14px}
+.stat b{display:block;font-family:'Playfair Display',serif;font-size:42px;font-weight:700;color:#7a5a14}
+.stat span{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:#6b5420;display:block;margin-top:8px;line-height:1.5}
+
+/* trillion hero */
+.hero-stat{background:radial-gradient(ellipse at center,rgba(201,168,76,.16),rgba(14,10,5,.95) 70%);border:1px solid rgba(201,168,76,.45);text-align:center;padding:60px 24px;box-shadow:0 0 90px rgba(201,168,76,.12),0 14px 34px rgba(0,0,0,.5)}
+.hero-stat .lbl{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:7px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:18px}
+.hero-stat .num{font-size:clamp(56px,12vw,128px);font-weight:300;font-style:italic;color:var(--gold);line-height:1;text-shadow:0 0 90px rgba(201,168,76,.4)}
+.hero-stat .sub{font-family:'Caveat',cursive;font-size:28px;color:var(--gold-bright);margin-top:18px}
+
+/* timeline */
+.timeline{position:relative}
+.timeline::before{content:'';position:absolute;top:50px;left:4%;right:4%;border-top:2px dashed rgba(163,42,34,.6);z-index:0}
+.t-card{background:#faf4e4;color:var(--paper-ink);text-align:center;padding:26px 10px 22px;z-index:2}
+.t-card .yr{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:4px;color:#8a6f33}
+.t-card b{display:block;font-family:'Playfair Display',serif;font-size:26px;margin:8px 0 6px;color:#2a1f0e}
+.t-card span{font-size:15px;line-height:1.4;display:block}
+.t-card.last{background:var(--gold-bright)}
+.t-card.last b{font-size:30px}
+
+/* before after */
+.ba{padding:34px 30px}
+.ba .tag{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:6px;text-transform:uppercase;margin-bottom:16px;display:block}
+.ba ul{list-style:none}
+.ba li{font-size:19px;line-height:1.55;padding:9px 0 9px 26px;position:relative;border-bottom:1px solid rgba(0,0,0,.1)}
+.ba li:last-child{border-bottom:none}
+.ba li::before{position:absolute;left:0;top:9px;font-size:14px}
+.ba.before{background:#d9d0bd;color:#3a3326}
+.ba.before .tag{color:#7a6e55}
+.ba.before li::before{content:'✕';color:#8a3a30}
+.ba.after{background:linear-gradient(160deg,#1c1409,#0f0b05);border:1px solid var(--gold)}
+.ba.after .tag{color:var(--gold)}
+.ba.after li{border-bottom-color:rgba(201,168,76,.18)}
+.ba.after li::before{content:'✦';color:var(--gold)}
+
+/* closing */
+#closing{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;z-index:2;padding:120px 32px;background:radial-gradient(ellipse at center bottom,rgba(40,28,10,.9) 0%,transparent 65%)}
+.cl-pre{font-family:'Josefin Sans',sans-serif;font-size:9px;letter-spacing:6px;text-transform:uppercase;color:var(--gold-dim);margin-bottom:28px}
+.cl-text{font-size:clamp(20px,3vw,34px);font-weight:300;font-style:italic;line-height:1.75;max-width:700px;margin:0 auto 36px}
+.cl-gold{font-size:clamp(30px,5vw,56px);font-style:italic;color:var(--gold);margin-bottom:14px;text-shadow:0 0 60px rgba(201,168,76,.3)}
+.cl-from{font-family:'Josefin Sans',sans-serif;font-size:10px;letter-spacing:5px;text-transform:uppercase;color:var(--muted);margin-top:8px}
+.wax-seal{width:80px;height:80px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#c0392b,#6b1515);display:flex;align-items:center;justify-content:center;margin:44px auto 0;transform:rotate(-8deg);box-shadow:0 4px 30px rgba(0,0,0,.5),inset 0 2px 6px rgba(255,255,255,.12)}
+.wax-text{font-family:'Josefin Sans',sans-serif;font-size:9px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,.85);text-align:center;text-transform:uppercase;line-height:1.3}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+
+@media(max-width:820px){
+  .board{padding:90px 20px 50px}
+  .grid{grid-template-columns:1fr;gap:38px}
+  .grid>*{grid-column:auto!important}
+  #chapter-nav{display:none}
+  .timeline::before{display:none}
+  .tl5{grid-template-columns:1fr!important}
+  .photo{height:170px}
+  .tile{--r:calc(var(--r0,0deg) * .5)}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<div id="progress-bar"></div>
+<button id="music-btn" title="Toggle ambient music" onclick="toggleMusic()">
+  <svg id="music-icon" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+</button>
+<div class="music-label" id="music-label">Ambient On</div>
+
+<nav id="chapter-nav">
+  <div class="nav-dot active" onclick="goTo(0)"><span class="dot-label">Prelude</span></div>
+  <div class="nav-dot" onclick="goTo(1)"><span class="dot-label">The Vision</span></div>
+  <div class="nav-dot" onclick="goTo(2)"><span class="dot-label">$1 Trillion</span></div>
+  <div class="nav-dot" onclick="goTo(3)"><span class="dot-label">India #1</span></div>
+  <div class="nav-dot" onclick="goTo(4)"><span class="dot-label">Forever Changed</span></div>
+  <div class="nav-dot" onclick="goTo(5)"><span class="dot-label">The Craft</span></div>
+  <div class="nav-dot" onclick="goTo(6)"><span class="dot-label">The Legacy</span></div>
+  <div class="nav-dot" onclick="goTo(7)"><span class="dot-label">The Letter</span></div>
+</nav>
+
+<!-- 0 OPENING -->
+<section id="opening" data-index="0">
+  <p class="op-pre">A Birthday Gift · The Vision Board</p>
+  <h1 class="op-title">Namit<br><span>Malhotra</span></h1>
+  <p class="op-tag">everything he dreamed, pinned in place</p>
+  <p class="op-sub">Global Visionary · Architect of Tomorrow's Cinema</p>
+  <p class="op-year">As remembered by the world, in the year 2036</p>
+  <div class="scroll-cue"><span>Begin</span><div class="scroll-line"></div></div>
+</section>
+
+<!-- 1 THE VISION -->
+<section class="board" data-index="1">
+  <div class="board-head reveal">
+    <p class="board-label">Board I</p>
+    <h2 class="board-title">The <em>Vision</em></h2>
+    <p class="board-note">pinned in a garage in Mumbai. Realised across the world.</p>
+  </div>
+  <div class="grid">
+    <div class="tile sticky tape s4" style="--r:-3deg;--r0:-3deg">If you can dream it, we can do it.<small>The one line that never changed</small></div>
+    <div class="tile polaroid tape s4" style="--r:2deg;--r0:2deg;--d:.12s">
+      <div class="photo"><b>$1T</b><i>Company worth</i></div>
+      <p class="cap">the number they laughed at</p>
+    </div>
+    <div class="tile polaroid tape s4" style="--r:-2deg;--r0:-2deg;--d:.24s">
+      <div class="photo c3"><b>#1</b><i>Film destination</i></div>
+      <p class="cap">India, the world's film capital</p>
+    </div>
+    <div class="tile paper pin s6" style="--r:1.2deg;--r0:1.2deg;--d:.1s">
+      <span class="src">Where it began</span>
+      <h3>One garage. One Apple computer. Three boys.</h3>
+      <p>And a refusal to believe that great cinema had a postcode. The third-generation son of a filmmaking family, you understood what the industry took decades to learn: the line between East and West was never a wall. It was a door.</p>
+    </div>
+    <div class="tile dark pin s6" style="--r:-1.4deg;--r0:-1.4deg;--d:.2s">
+      <span class="src">Diwali · 2026</span>
+      <h3>Ramayana</h3>
+      <p>The epic that proved an Indian story could be <em>everyone's</em> story, and the moment the world began to look East for its next great film.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 THE TRILLION -->
+<section class="board" data-index="2">
+  <div class="board-head reveal">
+    <p class="board-label">Board II</p>
+    <h2 class="board-title">The <em>$1 Trillion</em> Company</h2>
+    <p class="board-note">the number was never the point. But the world noticed.</p>
+  </div>
+  <div class="grid">
+    <div class="tile hero-stat s12" id="hero-stat">
+      <p class="lbl">DNEG Group · Company Worth · 2036</p>
+      <p class="num" id="trillion-counter">$0.00 Trillion</p>
+      <p class="sub">the first entertainment company ever to get here</p>
+    </div>
+  </div>
+
+  <div class="grid timeline tl5" style="margin-top:54px;grid-template-columns:repeat(5,1fr);gap:18px">
+    <div class="tile t-card pin" style="--r:-2deg;--r0:-2deg"><p class="yr">2026</p><b>Day One</b><span>Ramayana lights up the world</span></div>
+    <div class="tile t-card pin" style="--r:1.5deg;--r0:1.5deg;--d:.1s"><p class="yr">2028</p><b>$100B</b><span>Hollywood begins to follow</span></div>
+    <div class="tile t-card pin" style="--r:-1deg;--r0:-1deg;--d:.2s"><p class="yr">2031</p><b>$250B</b><span>The infrastructure of cinema</span></div>
+    <div class="tile t-card pin" style="--r:2deg;--r0:2deg;--d:.3s"><p class="yr">2033</p><b>$500B</b><span>Larger than the studios combined</span></div>
+    <div class="tile t-card last pin" style="--r:-1.5deg;--r0:-1.5deg;--d:.4s"><p class="yr">2036</p><b>$1 Trillion</b><span>The aim, achieved</span></div>
+  </div>
+
+  <div class="grid" style="margin-top:54px">
+    <div class="tile paper tape s7" style="--r:-1deg;--r0:-1deg">
+      <span class="src">Bloomberg · Front Page · 2036</span>
+      <h3>DNEG Group Becomes the First Entertainment Company Worth $1 Trillion</h3>
+      <p>Surpassing the great technology platforms, the studio-and-technology group built in Mumbai has rewritten what an entertainment company can be. Its founder's response was brief: <em>the story comes first</em>.</p>
+    </div>
+    <div class="tile sticky tape s5" style="--r:3deg;--r0:3deg;--d:.15s">They said an Indian company could not lead the world. We built the world's studio instead.<small>Pinned, 2036</small></div>
+    <div class="tile paper pin s6" style="--r:1.2deg;--r0:1.2deg;--d:.1s">
+      <span class="src">Forbes · 2031</span>
+      <h3>The Quarter-Trillion Club Has a New Member</h3>
+      <p>In Silicon Valley, they build platforms. In Mumbai, Namit Malhotra built something rarer: a company where art and engineering are indistinguishable.</p>
+    </div>
+    <div class="tile paper pin s6" style="--r:-1.3deg;--r0:-1.3deg;--d:.2s">
+      <span class="src">Financial Times · 2033</span>
+      <h3>The Company That Became the Infrastructure of Cinema</h3>
+      <p>Malhotra's empire is not a studio. It is the water the studios swim in.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3 INDIA -->
+<section class="board" data-index="3">
+  <div class="board-head reveal">
+    <p class="board-label">Board III</p>
+    <h2 class="board-title">India: The World's <em>Film Capital</em></h2>
+    <p class="board-note">cameras roll in India first.</p>
+  </div>
+  <div class="grid">
+    <div class="tile paper tape s8" style="--r:-1deg;--r0:-1deg">
+      <span class="src">Variety · Cover Story · 2034</span>
+      <h3>Hollywood Goes East: Every Major Studio Now Makes Its Films in India</h3>
+      <p>What began as a partnership became a migration. Directors, producers and entire studios now plan their biggest films around a single question: <em>can we shoot it, build it and finish it in India?</em> The answer, in 2034, is almost always yes.</p>
+    </div>
+    <div class="tile sticky tape s4" style="--r:3deg;--r0:3deg;--d:.12s">Not the back office of cinema. The front door.<small>The shift, in one line</small></div>
+
+    <div class="tile stat s4" style="--r:-1.5deg;--r0:-1.5deg"><b>#1</b><span>Global destination for production, VFX and post</span></div>
+    <div class="tile stat s4" style="--r:1deg;--r0:1deg;--d:.1s"><b>250,000</b><span>New creative careers built across the country</span></div>
+    <div class="tile stat s4" style="--r:-1deg;--r0:-1deg;--d:.2s"><b>1 in 3</b><span>Global blockbusters now made in India</span></div>
+
+    <div class="tile polaroid tape s4" style="--r:-2deg;--r0:-2deg">
+      <div class="photo"><b>Mumbai</b><i>The Storytellers</i></div><p class="cap">where the stories begin</p>
+    </div>
+    <div class="tile polaroid tape s4" style="--r:1.5deg;--r0:1.5deg;--d:.12s">
+      <div class="photo c3"><b>Hyderabad</b><i>The Spectacle</i></div><p class="cap">where the scale lives</p>
+    </div>
+    <div class="tile polaroid tape s4" style="--r:-1deg;--r0:-1deg;--d:.24s">
+      <div class="photo c2"><b>Bengaluru</b><i>The Technology</i></div><p class="cap">where the future is built</p>
+    </div>
+
+    <div class="tile quote pin s7" style="--r:-.8deg;--r0:-.8deg">
+      <blockquote>"Before Namit, we made films in India for India. After him, we make films in India for humanity."</blockquote>
+      <cite>- Nitesh Tiwari, director, Ramayana, 2031</cite>
+    </div>
+    <div class="tile paper pin s5" style="--r:1.6deg;--r0:1.6deg;--d:.15s">
+      <span class="src">The Economist · 2035</span>
+      <h3>The New Centre of Cinema</h3>
+      <p>Los Angeles still has the legend. India now has the studios, the talent, the technology and the stories.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 BEFORE / AFTER -->
+<section class="board" data-index="4">
+  <div class="board-head reveal">
+    <p class="board-label">Board IV</p>
+    <h2 class="board-title">The Landscape, <em>Changed Forever</em></h2>
+    <p class="board-note">it did not shift. It was rebuilt.</p>
+  </div>
+  <div class="grid">
+    <div class="tile ba before tape s6" style="--r:-1.2deg;--r0:-1.2deg">
+      <span class="tag">Before Namit</span>
+      <ul>
+        <li>India was the back office of world cinema</li>
+        <li>Great talent left home to find great work</li>
+        <li>Stories were shaped to suit someone else's screen</li>
+        <li>The centre of the industry had one address</li>
+      </ul>
+    </div>
+    <div class="tile ba after tape s6" style="--r:1.2deg;--r0:1.2deg;--d:.15s">
+      <span class="tag">After Namit</span>
+      <ul>
+        <li>India is where the world's biggest films begin</li>
+        <li>The talent stays, and the world comes to it</li>
+        <li>Stories are told in India's own voice, for everyone</li>
+        <li>The centre of cinema belongs to every culture</li>
+      </ul>
+    </div>
+    <div class="tile paper pin s12" style="--r:-.4deg;--r0:-.4deg;--d:.1s">
+      <span class="src">Indian Express · Heritage Edition · 2036</span>
+      <h3>The Boy from Mumbai Who Gave Indian Stories to the World</h3>
+      <p>Film historians now speak of two eras: before Namit Malhotra, and after. It is not a division of quality. It is a division of possibility, of what Indian filmmakers believed they were allowed to dream.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5 CRAFT -->
+<section class="board" data-index="5">
+  <div class="board-head reveal">
+    <p class="board-label">Board V</p>
+    <h2 class="board-title">Technology in Service of <em>Story</em></h2>
+    <p class="board-note">the tool is never the point.</p>
+  </div>
+  <div class="grid">
+    <div class="tile dark pin s7" style="--r:-1deg;--r0:-1deg">
+      <span class="src">The philosophy</span>
+      <h3>The servant, never the master</h3>
+      <p>What you built was never merely a company, Namit. It was a <em>philosophy</em>: that every tool, from the View-D rigs that first brought 3D to Bollywood to the AI-assisted pipelines DNEG pioneered in the 2030s, exists to put a human being inside a dream they could not otherwise enter.</p>
+    </div>
+    <div class="tile sticky tape s5" style="--r:2.5deg;--r0:2.5deg;--d:.12s">Fifteen Academy Awards. Fourteen thousand artists. Six continents.<small>and still, the story first</small></div>
+    <div class="tile quote pin s8" style="--r:.8deg;--r0:.8deg">
+      <blockquote>"Cinema has always asked one question: can you make them believe? Namit spent his entire life building the answer. Not just for my films, for all of ours. For all of time."</blockquote>
+      <cite>- Christopher Nolan, upon receiving an Honorary Doctorate from Oxford, 2034</cite>
+    </div>
+    <div class="tile paper tape s4" style="--r:-2deg;--r0:-2deg;--d:.18s">
+      <span class="src">Le Monde · 2035</span>
+      <h3>Namit Malhotra a redéfini ce que signifie raconter une histoire</h3>
+      <p>From Inception's folding Paris to Ramayana's Pushpak Viman soaring over the world.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 LEGACY -->
+<section class="board" data-index="6">
+  <div class="board-head reveal">
+    <p class="board-label">Board VI</p>
+    <h2 class="board-title">What the Future <em>Remembers</em></h2>
+    <p class="board-note">more than the number.</p>
+  </div>
+  <div class="grid">
+    <div class="tile dark tape s12" style="--r:-.5deg;--r0:-.5deg">
+      <span class="src">The truest measure</span>
+      <h3>Namit sir</h3>
+      <p>The truest measure of your life's work is not the trillion, the Oscars on the shelf or the headlines in the archive. It is the young filmmaker in Chennai who sat in a theatre that Diwali of 2026 and thought, for the first time, without hesitation: <em>my story can be the world's story.</em></p>
+    </div>
+    <div class="tile paper pin s7" style="--r:1deg;--r0:1deg;--d:.12s">
+      <span class="src">The garage and the cathedral</span>
+      <h3>It did not stay a garage.</h3>
+      <p>It became a cathedral, built not of stone but of light and imagination, and of the stubborn, magnificent refusal to accept that India's place in global cinema was anything less than first.</p>
+    </div>
+    <div class="tile sticky tape s5" style="--r:-3deg;--r0:-3deg;--d:.22s">Every filmmaker with a dream now has a door to knock on.<small>your real legacy</small></div>
+  </div>
+</section>
+
+<!-- 7 CLOSING -->
+<section id="closing" data-index="7">
+  <p class="cl-pre reveal">From the Global Entertainment Industry · 2036</p>
+  <p class="cl-text reveal">On this, your birthday, the global entertainment industry - every studio, every director, every artist whose work you made possible - offers you not an award. You have those.<br><br>We offer you something rarer:</p>
+  <p class="cl-gold reveal">Our gratitude. Our wonder.</p>
+  <p class="cl-text reveal" style="font-size:clamp(16px,2vw,20px)">That it was all there, in a garage, from the very beginning.</p>
+  <p class="cl-from reveal">Hollywood · Bollywood · Cannes · Every Story Ever Told</p>
+  <div class="wax-seal reveal"><div class="wax-text">NM<br>✦<br>2036</div></div>
+</section>
+
+<script>
+const sections=Array.from(document.querySelectorAll('[data-index]'));
+const navDots=Array.from(document.querySelectorAll('.nav-dot'));
+function goTo(i){sections[i].scrollIntoView({behavior:'smooth'})}
+
+const pb=document.getElementById('progress-bar');
+addEventListener('scroll',()=>{const dh=document.documentElement.scrollHeight-innerHeight;pb.style.width=(dh>0?scrollY/dh*100:0)+'%'},{passive:true});
+
+const navObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){const i=+e.target.dataset.index;navDots.forEach(d=>d.classList.remove('active'));if(navDots[i])navDots[i].classList.add('active')}}),{threshold:.25});
+sections.forEach(s=>navObs.observe(s));
+
+const revObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');revObs.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.tile,.reveal').forEach(el=>revObs.observe(el));
+
+// trillion counter
+(function(){
+  const box=document.getElementById('hero-stat'),num=document.getElementById('trillion-counter');let done=false;
+  new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting&&!done){done=true;const t0=performance.now(),dur=3200;
+      (function tick(n){const p=Math.min((n-t0)/dur,1),k=1-Math.pow(1-p,3);num.textContent='$'+k.toFixed(2)+' Trillion';if(p<1)requestAnimationFrame(tick)})(t0)}
+  }),{threshold:.5}).observe(box);
+})();
+
+// particles
+const canvas=document.getElementById('particle-canvas'),ctx=canvas.getContext('2d');
+function rs(){canvas.width=innerWidth;canvas.height=innerHeight}rs();addEventListener('resize',rs);
+let ps=[];
+function mk(){return{x:Math.random()*canvas.width,y:canvas.height+5,s:Math.random()*1.4+.3,v:Math.random()*.35+.08,o:0,m:Math.random()*.45+.1,d:(Math.random()-.5)*.25,l:0,L:Math.random()*280+180}}
+for(let i=0;i<45;i++){const p=mk();p.y=Math.random()*canvas.height;p.l=Math.random()*p.L;ps.push(p)}
+(function anim(){ctx.clearRect(0,0,canvas.width,canvas.height);
+  ps.forEach((p,i)=>{p.l++;p.y-=p.v;p.x+=p.d;const r=p.l/p.L;p.o=r<.1?r/.1*p.m:r>.8?(1-r)/.2*p.m:p.m;
+    ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,6.283);ctx.fillStyle='rgba(201,168,76,'+p.o+')';ctx.fill();
+    if(p.l>=p.L||p.y<-10)ps[i]=mk()});requestAnimationFrame(anim)})();
+
+// ambient music
+let ac=null,mg=null,playing=false;
+function build(){
+  ac=new(window.AudioContext||window.webkitAudioContext)();mg=ac.createGain();mg.gain.value=0;
+  const rl=ac.sampleRate*3.5,rb=ac.createBuffer(2,rl,ac.sampleRate);
+  for(let c=0;c<2;c++){const d=rb.getChannelData(c);for(let i=0;i<rl;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/rl,2.8)}
+  const rev=ac.createConvolver();rev.buffer=rb;mg.connect(rev);rev.connect(ac.destination);mg.connect(ac.destination);
+  [[73.4,.18],[110,.12],[146.8,.08],[174.6,.06],[220,.05],[55,.1]].forEach(([f,g])=>{
+    const o=ac.createOscillator(),gn=ac.createGain(),fl=ac.createBiquadFilter();
+    fl.type='lowpass';fl.frequency.value=900;o.type='sine';o.frequency.value=f;gn.gain.value=g;
+    o.connect(fl);fl.connect(gn);gn.connect(mg);
+    const lfo=ac.createOscillator(),lg=ac.createGain();lfo.frequency.value=.07+Math.random()*.06;lg.gain.value=f*.003;
+    lfo.connect(lg);lg.connect(o.frequency);lfo.start();o.start()})
+}
+function lbl(t){const l=document.getElementById('music-label');l.textContent=t;l.classList.add('visible');setTimeout(()=>l.classList.remove('visible'),2200)}
+function startMusic(){if(!ac)build();mg.gain.cancelScheduledValues(ac.currentTime);mg.gain.setTargetAtTime(.22,ac.currentTime,2.5);playing=true;
+  document.getElementById('music-icon').innerHTML='<path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>';lbl('Ambient On')}
+function stopMusic(){if(mg){mg.gain.cancelScheduledValues(ac.currentTime);mg.gain.setTargetAtTime(0,ac.currentTime,1.5)}playing=false;
+  document.getElementById('music-icon').innerHTML='<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>';lbl('Ambient Off')}
+function toggleMusic(){playing?stopMusic():startMusic()}
+let auto=false;addEventListener('scroll',()=>{if(!auto&&scrollY>120){auto=true;startMusic()}},{passive:true});
+</script>
+</body>
+</html>
